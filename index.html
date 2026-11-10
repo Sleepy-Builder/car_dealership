@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Horizon Motors | Curated Real Vehicles & Virtual Concierge</title>
+  <meta name="description" content="A pristine, transparent automotive gallery featuring authentic real-world cars, verified VINs, live finance calculation, side-by-side comparisons, and 24/7 AI Concierge." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Vue 3 CDN (Modern Reactive Framework) -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Custom Modern Light Theme Styles & Cinematic Intro Animations -->
+  <link rel="stylesheet" href="css/luxury-light.css" />
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-sky-500 selection:text-white overflow-x-hidden">
+
+  <div id="app" v-cloak class="min-h-screen flex flex-col justify-between">
+    
+    <!-- ======================================================== -->
+    <!-- CINEMATIC PRE-LANDING INTRO SCREEN (DISPLAYS BEFORE LANDING) -->
+    <!-- ======================================================== -->
+    <transition
+      enter-active-class="transition duration-500 ease-out"
+      leave-active-class="transition duration-700 ease-in-out"
+      leave-to-class="opacity-0 scale-105 pointer-events-none"
+    >
+      <div 
+        v-if="showIntro" 
+        class="fixed inset-0 z-50 intro-backdrop flex flex-col justify-between p-6 sm:p-12 overflow-hidden select-none"
+      >
+        <!-- Top Bar of Intro -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-md">
+              <i class="fa-solid fa-shield-halved text-sky-400"></i>
+            </div>
+            <div>
+              <span class="font-heading font-black text-lg tracking-tight text-slate-900">
+                APEX<span class="text-sky-600">HORIZON</span>
+              </span>
+              <span class="block text-[10px] text-slate-400 font-bold tracking-widest uppercase">Automotive Gallery</span>
+            </div>
+          </div>
+
+          <!-- Skip / Enter Button -->
+          <button 
+            type="button" 
+            @click="enterShowroom"
+            class="px-5 py-2.5 rounded-full bg-slate-900 hover:bg-sky-600 text-white text-xs font-bold transition shadow-lg flex items-center gap-2 group"
+          >
+            <span>Enter Showroom</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+
+        <!-- Center Stage: Moving Car & Telemetry -->
+        <div class="my-auto w-full max-w-5xl mx-auto flex flex-col items-center justify-center relative py-8">
+          
+          <!-- Intro Heading & Live Speedometer -->
+          <div class="text-center space-y-2 mb-8">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/80 border border-slate-200 text-sky-700 text-xs font-bold tracking-widest uppercase shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Live Dynamic Drive
+            </span>
+            <h2 class="font-heading text-3xl sm:text-5xl font-black text-slate-950 tracking-tight">
+              The Real Driving Experience
+            </h2>
+            <div class="flex items-center justify-center gap-2 text-slate-500 font-mono text-sm pt-1">
+              <span>VEHICLE TELEMETRY:</span>
+              <span class="font-bold text-sky-600 text-xl font-mono">{{ introMph }} MPH</span>
+              <span class="text-xs text-slate-400">• 443 HP COUPE</span>
+            </div>
+          </div>
+
+          <!-- Moving Car & Studio Road Strip -->
+          <div class="w-full relative flex flex-col items-center">
+            
+            <!-- Car Body Container with Entrance Sequence -->
+            <div class="relative z-10 animate-intro-car pb-3">
+              
+              <!-- Conical Xenon Headlight Beam -->
+              <div class="absolute top-10 left-[370px] w-72 sm:w-96 h-28 intro-headlight-cone pointer-events-none z-0"></div>
+
+              <!-- High-Precision Vector SVG Sports Car -->
+              <svg 
+                class="w-[340px] sm:w-[480px] md:w-[540px] h-auto drop-shadow-2xl relative z-10" 
+                viewBox="0 0 540 160" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="introCarPaint" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="35%" stop-color="#cbd5e1" />
+                    <stop offset="70%" stop-color="#94a3b8" />
+                    <stop offset="100%" stop-color="#334155" />
+                  </linearGradient>
+
+                  <linearGradient id="introGlassTint" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0284c7" stop-opacity="0.55" />
+                    <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9" />
+                  </linearGradient>
+
+                  <linearGradient id="introRimMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f8fafc" />
+                    <stop offset="50%" stop-color="#64748b" />
+                    <stop offset="100%" stop-color="#1e293b" />
+                  </linearGradient>
+                </defs>
+
+                <!-- Ground Shadow -->
+                <ellipse cx="270" cy="144" rx="230" ry="7" fill="#000000" opacity="0.35" filter="blur(3px)" />
+
+                <!-- Aerodynamic Sports Coupe Shell -->
+                <path 
+                  d="M 50 120 
+                     C 55 105, 75 90, 110 88 
+                     C 150 86, 180 75, 230 45 
+                     C 270 20, 340 18, 385 45 
+                     C 420 68, 470 78, 500 88 
+                     C 525 96, 535 110, 530 122 
+                     C 525 128, 480 130, 440 130 
+                     C 435 110, 415 95, 385 95 
+                     C 355 95, 335 110, 330 130 
+                     L 190 130 
+                     C 185 110, 165 95, 135 95 
+                     C 105 95, 85 110, 80 130 
+                     Z" 
+                  fill="url(#introCarPaint)"
+                  stroke="#475569" 
+                  stroke-width="1.5"
+                />
+
+                <!-- Tinted Cockpit Windows -->
+                <path 
+                  d="M 230 48 
+                     C 265 26, 335 24, 375 48 
+                     C 405 68, 440 76, 460 82 
+                     L 380 82 
+                     L 230 82 
+                     Z" 
+                  fill="url(#introGlassTint)" 
+                  stroke="#334155" 
+                  stroke-width="1"
+                />
+
+                <!-- Window Pillar (B-Pillar) -->
+                <line x1="330" y1="30" x2="330" y2="82" stroke="#0f172a" stroke-width="4" />
+
+                <!-- Front LED Headlight Cluster -->
+                <path d="M 485 86 C 500 88, 515 94, 520 98 L 490 98 Z" fill="#e0f2fe" filter="drop-shadow(0 0 6px #38bdf8)" />
+
+                <!-- Rear LED Tail Light Strip -->
+                <path d="M 52 100 C 60 100, 68 102, 70 106 L 50 106 Z" fill="#ef4444" filter="drop-shadow(0 0 4px #f87171)" />
+
+                <!-- Door crease & aerodynamic skirt -->
+                <path d="M 170 95 C 230 92, 330 92, 370 98" stroke="#1e293b" stroke-width="1.5" stroke-linecap="round" />
+                <rect x="180" y="125" width="150" height="4" rx="2" fill="#0f172a" />
+
+                <!-- Rear Wheel Assembly -->
+                <g transform="translate(135, 120)">
+                  <circle cx="0" cy="0" r="32" fill="#0f172a" />
+                  <g class="intro-spin-wheels">
+                    <circle cx="0" cy="0" r="28" fill="#1e293b" stroke="#0f172a" stroke-width="4" />
+                    <circle cx="0" cy="0" r="21" fill="url(#introRimMetal)" />
+                    <circle cx="0" cy="0" r="15" fill="#94a3b8" />
+                    <rect x="-12" y="-14" width="7" height="12" rx="2" fill="#ef4444" />
+                    <line x1="-19" y1="0" x2="19" y2="0" stroke="#f8fafc" stroke-width="2.5" />
+                    <line x1="0" y1="-19" x2="0" y2="19" stroke="#f8fafc" stroke-width="2.5" />
+                    <line x1="-13" y1="-13" x2="13" y2="13" stroke="#f8fafc" stroke-width="2" />
+                    <line x1="-13" y1="13" x2="13" y2="-13" stroke="#f8fafc" stroke-width="2" />
+                    <circle cx="0" cy="0" r="4.5" fill="#0f172a" />
+                  </g>
+                </g>
+
+                <!-- Front Wheel Assembly -->
+                <g transform="translate(385, 120)">
+                  <circle cx="0" cy="0" r="32" fill="#0f172a" />
+                  <g class="intro-spin-wheels">
+                    <circle cx="0" cy="0" r="28" fill="#1e293b" stroke="#0f172a" stroke-width="4" />
+                    <circle cx="0" cy="0" r="21" fill="url(#introRimMetal)" />
+                    <circle cx="0" cy="0" r="15" fill="#94a3b8" />
+                    <rect x="-12" y="-14" width="7" height="12" rx="2" fill="#ef4444" />
+                    <line x1="-19" y1="0" x2="19" y2="0" stroke="#f8fafc" stroke-width="2.5" />
+                    <line x1="0" y1="-19" x2="0" y2="19" stroke="#f8fafc" stroke-width="2.5" />
+                    <line x1="-13" y1="-13" x2="13" y2="13" stroke="#f8fafc" stroke-width="2" />
+                    <line x1="-13" y1="13" x2="13" y2="-13" stroke="#f8fafc" stroke-width="2" />
+                    <circle cx="0" cy="0" r="4.5" fill="#0f172a" />
+                  </g>
+                </g>
+
+              </svg>
+            </div>
+
+            <!-- Studio Floor Guideway & Dashed Speed Line -->
+            <div class="w-full max-w-3xl h-1.5 bg-slate-200 rounded-full relative overflow-hidden mt-1 shadow-inner">
+              <div class="w-full h-full intro-road-stripes"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Bottom Intro Loading Progress -->
+        <div class="max-w-xs mx-auto w-full text-center space-y-2">
+          <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+            <div class="h-full bg-sky-600 rounded-full animate-intro-progress"></div>
+          </div>
+          <p class="text-[11px] text-slate-400 font-mono uppercase tracking-wider">
+            Preparing Showroom Experience...
+          </p>
+        </div>
+
+      </div>
+    </transition>
+
+    <!-- ======================================================== -->
+    <!-- MAIN LANDING PAGE (PRISTINE, LIGHT, UNCLUTTERED) -->
+    <!-- ======================================================== -->
+
+    <!-- TOP NOTIFICATION STRIP -->
+    <div class="bg-white border-b border-slate-200 text-xs py-2 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-slate-600">
+        <div class="flex items-center gap-2.5">
+          <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-soft-pulse"></span>
+            Showroom Open Today
+          </span>
+          <span class="hidden sm:inline font-medium text-slate-700">9:00 AM – 8:00 PM • 742 Horizon Blvd, Metro City</span>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs">
+          <!-- Replay Intro Button -->
+          <button 
+            type="button" 
+            @click="replayIntro" 
+            class="text-sky-600 hover:text-sky-700 font-medium transition flex items-center gap-1"
+          >
+            <i class="fa-solid fa-play text-[10px]"></i>
+            <span>Replay Intro</span>
+          </button>
+          <span class="text-slate-300 hidden sm:inline">|</span>
+          <a href="tel:5553827400" class="hover:text-sky-600 transition flex items-center gap-1.5 font-medium text-slate-700">
+            <i class="fa-solid fa-phone text-sky-600"></i>
+            <span>(555) 382-7400</span>
+          </a>
+          <span class="text-slate-300 hidden md:inline">|</span>
+          <span class="hidden md:inline font-medium text-slate-600">
+            Rates from <strong class="text-sky-700 font-semibold">3.49% APR*</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <header class="sticky top-0 z-30 glass-header">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        <!-- Brand Logo -->
+        <a href="#" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white flex items-center justify-center font-bold text-lg shadow-sm group-hover:bg-sky-600 transition-colors">
+            <i class="fa-solid fa-shield-halved text-sky-400 text-lg"></i>
+          </div>
+          <div>
+            <span class="font-heading font-black text-xl tracking-tight text-slate-900 group-hover:text-sky-600 transition-colors">
+              APEX<span class="text-sky-600">HORIZON</span>
+            </span>
+            <span class="block text-[10px] text-slate-400 font-medium tracking-widest uppercase">Verified Auto Gallery</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+          <a href="#inventory-section" class="hover:text-sky-600 transition-colors">Real Inventory</a>
+          <a href="#calculator-section" class="hover:text-sky-600 transition-colors">Lease & Financing</a>
+          <a href="#standards-section" class="hover:text-sky-600 transition-colors">Certified Standards</a>
+          <a href="#showroom-section" class="hover:text-sky-600 transition-colors">Hours & Location</a>
+        </nav>
+
+        <!-- Right Quick Actions -->
+        <div class="flex items-center gap-3">
+          <!-- Chatbot Launcher Pill -->
+          <button 
+            type="button" 
+            @click="toggleBot" 
+            class="px-4 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-200 transition flex items-center gap-2"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-soft-pulse"></span>
+            <i class="fa-solid fa-comment-dots text-sky-600"></i>
+            <span class="hidden sm:inline">Ask AI Concierge</span>
+          </button>
+
+          <!-- Book Test Drive Button -->
+          <button 
+            type="button" 
+            @click="openTestDrive()" 
+            class="px-4 sm:px-5 py-2.5 rounded-full bg-slate-900 hover:bg-sky-600 text-white text-xs font-bold transition shadow-sm flex items-center gap-2"
+          >
+            <i class="fa-solid fa-calendar-check text-xs"></i>
+            <span>Test Drive</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- HERO SECTION (PRISTINE LIGHT EDITORIAL) -->
+    <section class="relative pt-12 pb-16 lg:pb-24 hero-light-gradient border-b border-slate-200/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Hero Text Content -->
+          <div class="lg:col-span-7 space-y-6">
+            
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-semibold">
+              <i class="fa-solid fa-certificate text-sky-600"></i>
+              <span>100% Verified Real Production Vehicles • Certified VINs</span>
+            </div>
+
+            <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[1.1]">
+              The Real Driving Experience. <br />
+              <span class="text-sky-600">
+                Pristine, Transparent, Certified.
+              </span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed">
+              Experience authentic real-world models from Porsche, Ford, BMW, Tesla, Toyota, and Honda. Transparent pricing, verified VINs, real factory horsepower, and full CarFax history reports.
+            </p>
+
+            <!-- Hero Action Buttons -->
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <a 
+                href="#inventory-section" 
+                class="px-6 py-3.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm transition shadow-lg shadow-sky-600/20 flex items-center gap-2.5"
+              >
+                <span>Browse {{ filteredCars.length }} Real Cars</span>
+                <i class="fa-solid fa-arrow-down text-xs"></i>
+              </a>
+
+              <button 
+                type="button" 
+                @click="toggleBot" 
+                class="px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm border border-slate-200 transition shadow-sm flex items-center gap-2"
+              >
+                <i class="fa-solid fa-robot text-sky-600"></i>
+                <span>Ask Dealership Bot</span>
+              </button>
+            </div>
+
+            <!-- Trust Stats Strip -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-slate-200">
+              <div>
+                <span class="block text-2xl font-black text-slate-900 font-heading">100%</span>
+                <span class="text-xs text-slate-500 font-medium">Authentic Production Cars</span>
+              </div>
+              <div>
+                <span class="block text-2xl font-black text-sky-600 font-heading">3.49%</span>
+                <span class="text-xs text-slate-500 font-medium">Starting APR Rates</span>
+              </div>
+              <div>
+                <span class="block text-2xl font-black text-slate-900 font-heading">160-Point</span>
+                <span class="text-xs text-slate-500 font-medium">ASE Certified Check</span>
+              </div>
+              <div>
+                <span class="block text-2xl font-black text-emerald-600 font-heading">3-Day</span>
+                <span class="text-xs text-slate-500 font-medium">Money-Back Guarantee</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Hero Featured Spotlight Card -->
+          <div class="lg:col-span-5">
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+              <div class="flex items-center justify-between mb-4">
+                <span class="bg-slate-900 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  Spotlight Vehicle
+                </span>
+                <span class="text-xs font-mono text-slate-500">VIN: WP0AB2A97•••</span>
+              </div>
+
+              <!-- Car Image -->
+              <div class="relative rounded-2xl overflow-hidden aspect-[16/10] bg-slate-100 mb-5">
+                <img 
+                  src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" 
+                  alt="2024 Porsche 911 Carrera S" 
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
+                <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-lg border border-slate-200 text-xs font-semibold text-slate-800">
+                  3.0L Boxer 6 • 443 HP
+                </div>
+              </div>
+
+              <div class="flex items-baseline justify-between mb-3">
+                <div>
+                  <h3 class="text-xl font-bold text-slate-900 font-heading">2024 Porsche 911 Carrera S</h3>
+                  <p class="text-xs text-slate-500">Coupe (992) • GT Silver Metallic</p>
+                </div>
+                <div class="text-right">
+                  <span class="text-2xl font-black text-slate-900 font-heading">$132,500</span>
+                </div>
+              </div>
+
+              <!-- 3 quick specs -->
+              <div class="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 text-center text-xs mb-4">
+                <div class="bg-slate-50 p-2 rounded-xl">
+                  <span class="block text-slate-400 text-[10px] uppercase font-bold">0-60 MPH</span>
+                  <span class="font-bold text-slate-800">3.3 sec</span>
+                </div>
+                <div class="bg-slate-50 p-2 rounded-xl">
+                  <span class="block text-slate-400 text-[10px] uppercase font-bold">Transmission</span>
+                  <span class="font-bold text-slate-800">8-Spd PDK</span>
+                </div>
+                <div class="bg-slate-50 p-2 rounded-xl">
+                  <span class="block text-slate-400 text-[10px] uppercase font-bold">Mileage</span>
+                  <span class="font-bold text-slate-800">4,850 mi</span>
+                </div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="flex gap-2">
+                <button 
+                  type="button" 
+                  @click="openCarModal(inventory[0])"
+                  class="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition text-center"
+                >
+                  Inspect Full Specs
+                </button>
+                <button 
+                  type="button" 
+                  @click="openTestDrive(inventory[0])"
+                  class="flex-1 py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold transition shadow-sm text-center"
+                >
+                  Book Test Drive
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY SHOWROOM SECTION -->
+    <section id="inventory-section" class="py-16 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header & Search Controls -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Showroom Inventory</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading mt-1">Verified Real Cars In Stock</h2>
+            <p class="text-slate-500 text-sm mt-1">
+              Showing {{ filteredCars.length }} authentic vehicles with verified VINs and manufacturer specifications.
+            </p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            <!-- Search bar -->
+            <div class="relative w-full sm:w-72">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input 
+                v-model="searchQuery" 
+                type="text" 
+                placeholder="Search Make, Model, VIN..." 
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition"
+              />
+              <button v-if="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <!-- Sort Select -->
+            <div class="relative w-full sm:w-auto">
+              <select 
+                v-model="sortBy" 
+                class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-medium text-slate-700 focus:outline-none focus:border-sky-500 transition"
+              >
+                <option value="featured">Sort: Featured</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="hp-desc">Highest Horsepower</option>
+                <option value="mileage-asc">Lowest Mileage</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Pill Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8">
+          <button 
+            type="button" 
+            @click="selectedCategory = 'all'"
+            :class="selectedCategory === 'all' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+            class="text-xs px-4 py-2 rounded-full transition whitespace-nowrap"
+          >
+            All Real Vehicles ({{ inventory.length }})
+          </button>
+
+          <button 
+            type="button" 
+            @click="selectedCategory = 'Sports'"
+            :class="selectedCategory === 'Sports' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+            class="text-xs px-4 py-2 rounded-full transition whitespace-nowrap flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-flag-checkered text-sky-500"></i> Sports & Performance
+          </button>
+
+          <button 
+            type="button" 
+            @click="selectedCategory = 'SUV'"
+            :class="selectedCategory === 'SUV' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+            class="text-xs px-4 py-2 rounded-full transition whitespace-nowrap flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-truck-pickup text-sky-500"></i> SUVs & Off-Road
+          </button>
+
+          <button 
+            type="button" 
+            @click="selectedCategory = 'Sedan'"
+            :class="selectedCategory === 'Sedan' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+            class="text-xs px-4 py-2 rounded-full transition whitespace-nowrap flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-car-side text-sky-500"></i> Sedans
+          </button>
+
+          <button 
+            type="button" 
+            @click="selectedCategory = 'Electric'"
+            :class="selectedCategory === 'Electric' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium'"
+            class="text-xs px-4 py-2 rounded-full transition whitespace-nowrap flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-bolt text-sky-500"></i> Electric & Hybrids
+          </button>
+
+          <!-- Condition filter -->
+          <button 
+            type="button" 
+            @click="selectedCondition = selectedCondition === 'New' ? 'all' : 'New'"
+            :class="selectedCondition === 'New' ? 'bg-emerald-600 text-white font-bold' : 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium'"
+            class="text-xs px-3.5 py-2 rounded-full transition whitespace-nowrap ml-auto"
+          >
+            Brand New
+          </button>
+
+          <button 
+            type="button" 
+            @click="selectedCondition = selectedCondition === 'Certified Pre-Owned' ? 'all' : 'Certified Pre-Owned'"
+            :class="selectedCondition === 'Certified Pre-Owned' ? 'bg-blue-600 text-white font-bold' : 'bg-blue-50 text-blue-800 border border-blue-200 font-medium'"
+            class="text-xs px-3.5 py-2 rounded-full transition whitespace-nowrap"
+          >
+            Certified CPO
+          </button>
+        </div>
+
+        <!-- Inventory Grid -->
+        <div v-if="filteredCars.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          
+          <div 
+            v-for="car in filteredCars" 
+            :key="car.id" 
+            class="card-elevation rounded-3xl overflow-hidden flex flex-col justify-between group"
+          >
+            <!-- Top Image Area -->
+            <div class="relative overflow-hidden aspect-[16/10] bg-slate-100 cursor-pointer" @click="openCarModal(car)">
+              <img 
+                :src="car.images[0]" 
+                :alt="`${car.year} ${car.make} ${car.model}`"
+                loading="lazy"
+                class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-80"></div>
+              
+              <!-- Badges -->
+              <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center">
+                <span 
+                  v-if="car.condition === 'New'" 
+                  class="bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm"
+                >
+                  New
+                </span>
+                <span 
+                  v-else 
+                  class="bg-blue-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm"
+                >
+                  Certified CPO
+                </span>
+                <span class="bg-white/90 text-slate-800 text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
+                  {{ car.badge }}
+                </span>
+              </div>
+
+              <!-- Mileage Pill -->
+              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] text-slate-800 font-mono font-medium shadow-sm">
+                {{ car.mileage.toLocaleString() }} mi
+              </div>
+
+              <!-- Bottom Car Details Overlay -->
+              <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
+                <div>
+                  <span class="text-[11px] font-semibold text-sky-300 uppercase tracking-wide block">{{ car.year }} • {{ car.make }}</span>
+                  <h3 class="text-lg font-bold font-heading leading-tight">{{ car.model }}</h3>
+                  <p class="text-xs text-slate-200 line-clamp-1">{{ car.trim }}</p>
+                </div>
+                <div class="text-right">
+                  <span class="text-xl font-black font-heading">${{ car.price.toLocaleString() }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Specs Grid & Action Buttons -->
+            <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+              
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center gap-2">
+                  <i class="fa-solid fa-gauge-high text-sky-600 text-sm"></i>
+                  <div>
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Power</span>
+                    <span class="font-bold text-slate-800">{{ car.horsepower }} HP</span>
+                  </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center gap-2">
+                  <i class="fa-solid fa-gas-pump text-sky-600 text-sm"></i>
+                  <div>
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">{{ car.fuelType === 'Electric' ? 'Range' : 'Efficiency' }}</span>
+                    <span class="font-bold text-slate-800">{{ car.range || `${car.fuelEconomy.combined} MPG` }}</span>
+                  </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center gap-2">
+                  <i class="fa-solid fa-gears text-sky-600 text-sm"></i>
+                  <div>
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Drivetrain</span>
+                    <span class="font-bold text-slate-800 truncate">{{ car.drivetrain.split(' ')[0] }}</span>
+                  </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center gap-2">
+                  <i class="fa-solid fa-stopwatch text-sky-600 text-sm"></i>
+                  <div>
+                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">0-60 MPH</span>
+                    <span class="font-bold text-slate-800">{{ car.zeroToSixty }}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- VIN & Compare checkbox row -->
+              <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                <span class="font-mono">VIN: <strong class="text-slate-700">{{ car.vin.substring(0, 11) }}•••</strong></span>
+                
+                <button 
+                  type="button" 
+                  @click="toggleCompare(car)"
+                  class="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-lg border transition"
+                  :class="isCompared(car.id) ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'"
+                >
+                  <i class="fa-solid fa-code-compare text-xs" :class="isCompared(car.id) ? 'text-sky-600' : 'text-slate-400'"></i>
+                  <span>{{ isCompared(car.id) ? 'Comparing' : 'Compare' }}</span>
+                </button>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="grid grid-cols-2 gap-2 pt-1">
+                <button 
+                  type="button" 
+                  @click="openCarModal(car)"
+                  class="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition border border-slate-200 flex items-center justify-center gap-1.5"
+                >
+                  <i class="fa-regular fa-eye"></i> Specs & VIN
+                </button>
+                <button 
+                  type="button" 
+                  @click="openTestDrive(car)"
+                  class="w-full py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5"
+                >
+                  <i class="fa-solid fa-key"></i> Test Drive
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="py-16 text-center bg-slate-50 border border-slate-200 rounded-3xl p-8">
+          <div class="w-16 h-16 mx-auto mb-4 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 text-2xl shadow-sm">
+            <i class="fa-solid fa-car-tunnel"></i>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 font-heading mb-2">No Matching Real Cars</h3>
+          <p class="text-slate-500 text-sm max-w-md mx-auto mb-6">
+            We couldn't find vehicles matching your search criteria. Try clearing search filters or ask our Virtual AI Concierge for recommendations.
+          </p>
+          <button 
+            type="button" 
+            @click="searchQuery = ''; selectedCategory = 'all'; selectedCondition = 'all';"
+            class="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-full text-xs font-bold transition shadow-sm"
+          >
+            Reset Filters
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LIVE PAYMENT CALCULATOR SECTION -->
+    <section id="calculator-section" class="py-16 bg-slate-50 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-sm">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Left Info Panel -->
+            <div class="lg:col-span-5 space-y-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Transparent Financing</span>
+              <h2 class="text-3xl font-extrabold text-slate-900 font-heading">Live Payment Calculator</h2>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                Customize your financing with complete clarity. Adjust terms, trade-in value, and down payment to see your exact estimated monthly payment.
+              </p>
+
+              <!-- Tabs: Finance vs Lease -->
+              <div class="flex p-1 bg-slate-100 rounded-xl max-w-xs">
+                <button 
+                  type="button" 
+                  @click="calcType = 'finance'" 
+                  :class="calcType === 'finance' ? 'bg-white text-slate-900 font-bold shadow-sm' : 'text-slate-600 font-medium'"
+                  class="flex-1 py-1.5 text-xs rounded-lg transition"
+                >
+                  Finance (Purchase)
+                </button>
+                <button 
+                  type="button" 
+                  @click="calcType = 'lease'" 
+                  :class="calcType === 'lease' ? 'bg-white text-slate-900 font-bold shadow-sm' : 'text-slate-600 font-medium'"
+                  class="flex-1 py-1.5 text-xs rounded-lg transition"
+                >
+                  Lease (36 Mos)
+                </button>
+              </div>
+
+              <!-- Big Result Box -->
+              <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                <span class="text-xs text-slate-500 uppercase font-semibold block">Estimated Payment</span>
+                <div class="flex items-baseline gap-2 mt-1">
+                  <span class="text-4xl font-black text-sky-600 font-heading">${{ monthlyPayment.toLocaleString() }}</span>
+                  <span class="text-xs text-slate-500 font-medium">/ month (est.*)</span>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-slate-200 grid grid-cols-2 gap-4 text-xs text-slate-600">
+                  <div>
+                    <span class="block text-slate-400">Total Financed:</span>
+                    <strong class="text-slate-800 font-mono">${{ Math.max(0, calcPrice - calcDown - calcTrade).toLocaleString() }}</strong>
+                  </div>
+                  <div>
+                    <span class="block text-slate-400">Total Interest:</span>
+                    <strong class="text-slate-800 font-mono">${{ totalInterestCost.toLocaleString() }}</strong>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Sliders & Inputs -->
+            <div class="lg:col-span-7 space-y-4">
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Vehicle Price -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Vehicle Price ($)</label>
+                  <input 
+                    v-model.number="calcPrice" 
+                    type="number" 
+                    step="500" 
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-sky-500 font-mono"
+                  />
+                </div>
+
+                <!-- Down Payment -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Down Payment ($)</label>
+                  <input 
+                    v-model.number="calcDown" 
+                    type="number" 
+                    step="500" 
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-sky-500 font-mono"
+                  />
+                </div>
+
+                <!-- Trade-in Allowance -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Trade-in Allowance ($)</label>
+                  <input 
+                    v-model.number="calcTrade" 
+                    type="number" 
+                    step="500" 
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-sky-500 font-mono"
+                  />
+                </div>
+
+                <!-- APR % -->
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Estimated APR (%)</label>
+                  <input 
+                    v-model.number="calcApr" 
+                    type="number" 
+                    step="0.1" 
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-sky-500 font-mono"
+                  />
+                </div>
+              </div>
+
+              <!-- Loan Term Selection (Only for finance) -->
+              <div v-if="calcType === 'finance'">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Loan Duration</label>
+                <div class="grid grid-cols-4 gap-2">
+                  <button 
+                    v-for="term in [36, 48, 60, 72]" 
+                    :key="term"
+                    type="button" 
+                    @click="calcTerm = term"
+                    :class="calcTerm === term ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium'"
+                    class="py-2 rounded-xl text-xs transition"
+                  >
+                    {{ term }} Mos
+                  </button>
+                </div>
+              </div>
+
+              <div class="pt-2 flex flex-wrap gap-3">
+                <button 
+                  type="button" 
+                  @click="openTestDrive()" 
+                  class="flex-1 py-3 px-4 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-sm text-center"
+                >
+                  Apply with this Estimate
+                </button>
+                <button 
+                  type="button" 
+                  @click="toggleBot" 
+                  class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-xl transition border border-slate-200 flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-robot text-sky-600"></i>
+                  <span>Financing Q&A</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CERTIFIED STANDARDS SECTION -->
+    <section id="standards-section" class="py-16 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Peace of Mind</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading mt-1">Our Certified Standards</h2>
+          <p class="text-slate-500 text-sm mt-2">
+            Every vehicle on our floor must satisfy stringent mechanical, cosmetic, and safety benchmarks.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 hover:border-slate-300 transition">
+            <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-award"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 font-heading mb-1.5">7-Year Warranty</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Every certified vehicle is backed by our comprehensive 7-Year / 100,000-Mile powertrain warranty.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 hover:border-slate-300 transition">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 font-heading mb-1.5">3-Day Money-Back</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Drive with total confidence. 3 days or 300 miles full money-back return policy with zero restocking fees.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 hover:border-slate-300 transition">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-stethoscope"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 font-heading mb-1.5">160-Point Inspection</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              From engine compression to brake thickness and battery telemetry, verified by ASE master mechanics.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 hover:border-slate-300 transition">
+            <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-file-shield"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 font-heading mb-1.5">Free CarFax Report</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Full transparency on ownership history, past service maintenance logs, and title integrity.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SHOWROOM HOURS & LOCATION -->
+    <section id="showroom-section" class="py-16 bg-slate-50 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- Hours & Address -->
+          <div class="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Showroom & Gallery</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading mt-1 mb-6">Hours & Visiting Details</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              
+              <!-- Hours -->
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 mb-3">
+                  <i class="fa-regular fa-clock text-sky-600"></i> Showroom Hours
+                </h4>
+                <ul class="text-xs text-slate-600 space-y-2">
+                  <li class="flex justify-between">
+                    <span>Monday – Friday:</span>
+                    <strong class="text-slate-900">9:00 AM – 8:00 PM</strong>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>Saturday:</span>
+                    <strong class="text-slate-900">9:00 AM – 7:00 PM</strong>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>Sunday:</span>
+                    <strong class="text-slate-900">10:00 AM – 5:00 PM</strong>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Address -->
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 mb-3">
+                  <i class="fa-solid fa-location-dot text-sky-600"></i> Location & Directions
+                </h4>
+                <p class="text-xs font-bold text-slate-900">Apex Horizon Motors</p>
+                <p class="text-xs text-slate-600">742 Horizon Boulevard, Suite 100</p>
+                <p class="text-xs text-slate-600">Metro City, CA 90210</p>
+                <p class="text-[11px] text-sky-600 mt-2 font-medium">Off Exit 14 on Highway 101 • Valet Parking</p>
+              </div>
+
+            </div>
+
+            <!-- Contact Numbers -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
+              <div>
+                <span class="text-slate-400 block uppercase text-[10px] font-semibold">Direct Sales</span>
+                <a href="tel:5553827400" class="font-bold text-slate-800 hover:text-sky-600 transition">(555) 382-7400</a>
+              </div>
+              <div>
+                <span class="text-slate-400 block uppercase text-[10px] font-semibold">Toll-Free</span>
+                <a href="tel:18005552739" class="font-bold text-slate-800 hover:text-sky-600 transition">1-800-555-APEX</a>
+              </div>
+              <div>
+                <span class="text-slate-400 block uppercase text-[10px] font-semibold">Concierge Email</span>
+                <span class="font-medium text-slate-700">concierge@apexmotors.com</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Test Drive Card -->
+          <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-xl">
+            <div>
+              <div class="w-10 h-10 rounded-2xl bg-white/10 text-sky-400 flex items-center justify-center text-lg mb-4">
+                <i class="fa-solid fa-gauge-high"></i>
+              </div>
+              <h3 class="text-xl font-extrabold font-heading mb-2">Book an Open-Road Test Drive</h3>
+              <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                Experience real power on the road. Pick your vehicle, select your preferred date, and our sales specialist will have the keys ready for you upon arrival.
+              </p>
+              <ul class="text-xs text-slate-300 space-y-1.5 mb-6">
+                <li>✓ Valid driver's license required</li>
+                <li>✓ 30-minute private expressway test route</li>
+                <li>✓ Zero purchase pressure</li>
+              </ul>
+            </div>
+
+            <button 
+              type="button" 
+              @click="openTestDrive()" 
+              class="w-full py-3.5 px-4 bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-xs rounded-2xl transition shadow-md flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-calendar-plus"></i>
+              <span>Schedule VIP Appointment</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white py-12 text-xs text-slate-500 border-t border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black">
+              <i class="fa-solid fa-car text-sky-400"></i>
+            </div>
+            <span class="font-heading font-extrabold text-base text-slate-900">APEX HORIZON MOTORS</span>
+          </div>
+          <p class="text-slate-500 text-center md:text-right">
+            742 Horizon Boulevard, Metro City, CA 90210 • Licensed Auto Dealer #49281
+          </p>
+        </div>
+
+        <div class="border-t border-slate-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p>© 2026 Apex Horizon Motors Group. All verified real vehicle specifications and VINs authenticated.</p>
+          <div class="flex gap-4 text-slate-500">
+            <a href="#" class="hover:text-sky-600">Privacy Policy</a>
+            <a href="#" class="hover:text-sky-600">Terms of Sale</a>
+            <a href="#" class="hover:text-sky-600">CarFax Disclosure</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ======================================================= -->
+    <!-- STICKY COMPARISON TRAY (Bottom Floating Bar) -->
+    <!-- ======================================================= -->
+    <div 
+      v-if="comparedCars.length > 0" 
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-white/95 backdrop-blur-xl border border-slate-300 rounded-full px-5 py-3 shadow-2xl flex items-center gap-4 transition-all"
+    >
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-slate-900">Comparing ({{ comparedCars.length }}/3):</span>
+        <div class="flex items-center -space-x-2">
+          <img 
+            v-for="c in comparedCars" 
+            :key="c.id" 
+            :src="c.images[0]" 
+            :alt="c.model"
+            class="w-7 h-7 rounded-full object-cover border-2 border-white shadow-sm"
+          />
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button 
+          type="button" 
+          @click="showCompareModal = true"
+          class="px-4 py-1.5 rounded-full bg-slate-900 hover:bg-sky-600 text-white text-xs font-bold transition shadow-sm"
+        >
+          View Comparison Table
+        </button>
+        <button 
+          type="button" 
+          @click="clearComparison"
+          class="text-xs text-slate-400 hover:text-slate-600 p-1"
+          title="Clear"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- MODAL: VEHICLE SPECIFICATIONS & VIN DETAIL -->
+    <!-- ======================================================= -->
+    <div 
+      v-if="selectedCar" 
+      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+      @click.self="closeCarModal"
+    >
+      <div class="relative bg-white border border-slate-200 rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-8">
+        
+        <!-- Close Button -->
+        <button 
+          type="button" 
+          @click="closeCarModal" 
+          class="absolute top-5 right-5 z-20 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- Left: Gallery & Features -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="relative rounded-2xl overflow-hidden aspect-[16/10] bg-slate-100 border border-slate-200">
+              <img 
+                :src="selectedCar.images[activeModalImageIndex]" 
+                :alt="selectedCar.model" 
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute top-3 left-3 flex gap-2">
+                <span class="bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">
+                  {{ selectedCar.condition }}
+                </span>
+                <span class="bg-white/90 text-slate-700 text-[10px] px-2.5 py-1 rounded-full border border-slate-200 font-mono">
+                  Stock #{{ selectedCar.stockNumber }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Thumbnails -->
+            <div class="flex gap-2">
+              <button 
+                v-for="(img, idx) in selectedCar.images" 
+                :key="idx" 
+                type="button" 
+                @click="activeModalImageIndex = idx"
+                :class="activeModalImageIndex === idx ? 'ring-2 ring-sky-600' : 'opacity-60 hover:opacity-100'"
+                class="w-20 h-14 rounded-xl overflow-hidden border border-slate-200 transition"
+              >
+                <img :src="img" alt="thumb" class="w-full h-full object-cover" />
+              </button>
+            </div>
+
+            <!-- Highlights -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+              <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-sky-600"></i> Standard & Optional Highlights
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
+                <div v-for="h in selectedCar.highlights" :key="h" class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-600 text-xs mt-0.5"></i>
+                  <span>{{ h }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Warranty -->
+            <div class="p-3.5 rounded-xl bg-sky-50 border border-sky-100 text-xs text-slate-700 flex items-start gap-2.5">
+              <i class="fa-solid fa-shield-halved text-sky-600 mt-0.5"></i>
+              <div>
+                <strong class="text-slate-900 block">Warranty Coverage</strong>
+                <span>{{ selectedCar.warranty }}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Specs & Actions -->
+          <div class="lg:col-span-5 flex flex-col justify-between space-y-5">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                <span>{{ selectedCar.year }} {{ selectedCar.make }}</span>
+                <span class="font-mono">{{ selectedCar.mileage.toLocaleString() }} miles</span>
+              </div>
+
+              <h2 class="text-2xl font-black text-slate-900 font-heading">{{ selectedCar.model }}</h2>
+              <p class="text-xs text-sky-600 font-bold mb-4">{{ selectedCar.trim }}</p>
+
+              <!-- Price Box -->
+              <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl mb-4 flex items-center justify-between">
+                <div>
+                  <span class="text-xs text-slate-400 line-through block">MSRP ${{ selectedCar.msrp.toLocaleString() }}</span>
+                  <span class="text-2xl font-black text-slate-900 font-heading">${{ selectedCar.price.toLocaleString() }}</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-[10px] text-slate-400 uppercase font-semibold block">Est. Payment</span>
+                  <span class="text-sm font-bold text-sky-600">~${{ Math.round(selectedCar.price * 0.016) }}/mo*</span>
+                </div>
+              </div>
+
+              <!-- Technical Specifications Table -->
+              <div class="space-y-1.5 text-xs">
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                  <span class="text-slate-500">VIN</span>
+                  <span class="font-mono font-bold text-slate-800 select-all">{{ selectedCar.vin }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Engine / Powertrain</span>
+                  <span class="font-semibold text-slate-800 text-right max-w-[60%]">{{ selectedCar.engine }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Horsepower</span>
+                  <span class="font-semibold text-slate-800">{{ selectedCar.horsepower }} HP</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Torque</span>
+                  <span class="font-semibold text-slate-800">{{ selectedCar.torque }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                  <span class="text-slate-500">0 - 60 MPH</span>
+                  <span class="font-semibold text-slate-800">{{ selectedCar.zeroToSixty }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Efficiency / Range</span>
+                  <span class="font-semibold text-emerald-700">{{ selectedCar.range ? `${selectedCar.range} Range` : `${selectedCar.fuelEconomy.city}/${selectedCar.fuelEconomy.highway} MPG` }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Drivetrain</span>
+                  <span class="font-semibold text-slate-800">{{ selectedCar.drivetrain }}</span>
+                </div>
+                <div class="flex justify-between py-1">
+                  <span class="text-slate-500">Exterior Color</span>
+                  <span class="font-semibold text-slate-800">{{ selectedCar.exteriorColor }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="space-y-2 pt-2">
+              <button 
+                type="button" 
+                @click="closeCarModal(); openTestDrive(selectedCar);"
+                class="w-full py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-2"
+              >
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Book Test Drive with this {{ selectedCar.model }}</span>
+              </button>
+
+              <button 
+                type="button" 
+                @click="loadPriceInCalculator(selectedCar.price)"
+                class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs rounded-xl transition border border-slate-200 flex items-center justify-center gap-2"
+              >
+                <i class="fa-solid fa-calculator text-sky-600"></i>
+                <span>Calculate Financing for ${{ selectedCar.price.toLocaleString() }}</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- MODAL: SIDE-BY-SIDE VEHICLE COMPARISON -->
+    <!-- ======================================================= -->
+    <div 
+      v-if="showCompareModal" 
+      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+      @click.self="showCompareModal = false"
+    >
+      <div class="relative bg-white border border-slate-200 rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl p-6 sm:p-8">
+        
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Side-by-Side</span>
+            <h3 class="text-2xl font-black text-slate-900 font-heading">Vehicle Comparison Matrix</h3>
+          </div>
+          <button 
+            type="button" 
+            @click="showCompareModal = false" 
+            class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead>
+              <tr class="border-b border-slate-200">
+                <th class="py-3 px-3 text-slate-400 font-medium">Specs</th>
+                <th v-for="car in comparedCars" :key="car.id" class="py-3 px-3">
+                  <div class="w-32 sm:w-44">
+                    <img :src="car.images[0]" :alt="car.model" class="w-full h-24 object-cover rounded-xl mb-2" />
+                    <span class="text-slate-400 text-[10px] uppercase font-bold">{{ car.year }} • {{ car.make }}</span>
+                    <h4 class="font-bold text-slate-900 font-heading line-clamp-1">{{ car.model }}</h4>
+                    <span class="font-black text-sky-600 text-sm">${{ car.price.toLocaleString() }}</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-500">Horsepower</td>
+                <td v-for="car in comparedCars" :key="car.id" class="py-2.5 px-3 font-bold text-slate-900">{{ car.horsepower }} HP</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-500">0 - 60 MPH</td>
+                <td v-for="car in comparedCars" :key="car.id" class="py-2.5 px-3 font-bold text-slate-900">{{ car.zeroToSixty }}</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-500">Engine / Powertrain</td>
+                <td v-for="car in comparedCars" :key="car.id" class="py-2.5 px-3 text-slate-700">{{ car.engine }}</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-500">Drivetrain</td>
+                <td v-for="car in comparedCars" :key="car.id" class="py-2.5 px-3 text-slate-700">{{ car.drivetrain }}</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-500">Economy / Range</td>
+                <td v-for="car in comparedCars" :key="car.id" class="py-2.5 px-3 font-semibold text-emerald-700">
+                  {{ car.range ? `${car.range} Range` : `${car.fuelEconomy.combined} MPG` }}
+                </td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-500">Mileage</td>
+                <td v-for="car in comparedCars" :key="car.id" class="py-2.5 px-3 font-mono text-slate-700">{{ car.mileage.toLocaleString() }} mi</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-slate-500">VIN</td>
+                <td v-for="car in comparedCars" :key="car.id" class="py-2.5 px-3 font-mono text-[10px] text-slate-500 select-all">{{ car.vin }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- MODAL: SCHEDULE TEST DRIVE -->
+    <!-- ======================================================= -->
+    <div 
+      v-if="showTestDriveModal" 
+      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+      @click.self="closeTestDrive"
+    >
+      <div class="relative bg-white border border-slate-200 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl">
+        <button 
+          type="button" 
+          @click="closeTestDrive" 
+          class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="mb-5">
+          <span class="text-xs font-bold uppercase tracking-wider text-sky-600">VIP Reservation</span>
+          <h3 class="text-2xl font-black text-slate-900 font-heading mt-1">Book an Open-Road Test Drive</h3>
+          <p class="text-xs text-slate-500 mt-1">Our sales concierge will have the vehicle prepped and fueled.</p>
+        </div>
+
+        <form @submit="submitTestDrive" class="space-y-4 text-xs">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Selected Vehicle</label>
+            <select v-model="testDriveCar" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-slate-800 focus:outline-none focus:border-sky-500">
+              <option v-for="c in inventory" :key="c.id" :value="c">
+                {{ c.year }} {{ c.make }} {{ c.model }} ({{ c.trim }}) - ${{ c.price.toLocaleString() }}
+              </option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Preferred Date</label>
+              <input type="date" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-sky-500" />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Preferred Time</label>
+              <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-sky-500">
+                <option>10:00 AM (Morning)</option>
+                <option>1:30 PM (Afternoon)</option>
+                <option>4:00 PM (Late Afternoon)</option>
+                <option>6:00 PM (Evening)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Full Name</label>
+              <input type="text" placeholder="Jane Doe" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-sky-500" />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Phone Number</label>
+              <input type="tel" placeholder="(555) 000-0000" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-sky-500" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Email Address</label>
+            <input type="email" placeholder="jane@example.com" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-sky-500" />
+          </div>
+
+          <div class="flex items-start gap-2 pt-1 text-[11px] text-slate-500">
+            <input type="checkbox" required class="mt-0.5 rounded text-sky-600 focus:ring-sky-500" />
+            <span>I confirm I possess a valid driver's license and active auto insurance.</span>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition shadow-sm mt-2">
+            Confirm Test Drive Reservation
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- FLOATING DEALERSHIP AI CONCIERGE BOT (AURA) -->
+    <!-- ======================================================= -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+      
+      <!-- Chat Window -->
+      <div 
+        v-if="isBotOpen" 
+        class="w-[92vw] sm:w-[410px] h-[540px] bg-white border border-slate-200 rounded-3xl shadow-2xl flex flex-col overflow-hidden mb-3 animate-fade-in"
+      >
+        <!-- Chat Header -->
+        <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="relative w-9 h-9 rounded-full bg-sky-100 border border-sky-200 flex items-center justify-center text-sky-600 text-sm">
+              <i class="fa-solid fa-robot"></i>
+              <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-xs font-bold text-slate-900">Aura • Showroom Concierge</h3>
+                <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded-full">ACTIVE</span>
+              </div>
+              <p class="text-[10px] text-slate-500">Answers hours, location, rates, & car specs</p>
+            </div>
+          </div>
+
+          <button 
+            type="button" 
+            @click="toggleBot" 
+            class="w-7 h-7 rounded-full bg-slate-200/70 hover:bg-slate-300 text-slate-600 flex items-center justify-center text-xs transition"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Chat Messages Container -->
+        <div ref="botChatContainer" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs bg-slate-50/50">
+          
+          <div 
+            v-for="(msg, i) in botMessages" 
+            :key="i" 
+            :class="msg.sender === 'user' ? 'flex justify-end' : 'flex items-start gap-2.5'"
+          >
+            <!-- Bot Avatar -->
+            <div 
+              v-if="msg.sender === 'bot'" 
+              class="w-7 h-7 rounded-full bg-sky-100 text-sky-600 border border-sky-200 flex items-center justify-center shrink-0 text-xs mt-0.5"
+            >
+              <i class="fa-solid fa-robot"></i>
+            </div>
+
+            <!-- Bubble Content -->
+            <div 
+              :class="msg.sender === 'user' ? 'bot-bubble-user rounded-2xl rounded-tr-sm max-w-[82%] px-3.5 py-2.5 shadow-sm' : 'bot-bubble-agent rounded-2xl rounded-tl-sm max-w-[85%] px-3.5 py-2.5 shadow-sm space-y-2'"
+            >
+              <!-- Formatted text -->
+              <div class="whitespace-pre-line leading-relaxed" v-html="msg.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')"></div>
+
+              <p v-if="msg.subtitle" class="text-slate-500 text-[11px] leading-relaxed">{{ msg.subtitle }}</p>
+
+              <!-- Optional action pills in bot response -->
+              <div v-if="msg.actions && msg.actions.length > 0" class="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                <button 
+                  v-for="(act, ai) in msg.actions" 
+                  :key="ai"
+                  type="button" 
+                  @click="act.query ? executePrompt(act.query) : handleBotAction(act.action, act.payload || act.car)"
+                  class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition"
+                >
+                  {{ act.label }}
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Typing indicator -->
+          <div v-if="isBotTyping" class="flex items-center gap-2 text-slate-400 text-xs pl-9">
+            <span class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce"></span>
+            <span class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+            <span class="w-1.5 h-1.5 bg-sky-500 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+          </div>
+
+        </div>
+
+        <!-- Input Bar -->
+        <div class="p-3 bg-white border-t border-slate-200">
+          <form @submit.prevent="sendBotMessage" class="flex items-center gap-2">
+            <input 
+              v-model="botInput" 
+              type="text" 
+              placeholder="Ask hours, address, test drives, or car specs..." 
+              class="flex-1 bg-slate-50 border border-slate-200 rounded-full px-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-500 transition"
+            />
+            <button 
+              type="submit" 
+              class="w-8 h-8 rounded-full bg-sky-600 hover:bg-sky-700 text-white flex items-center justify-center text-xs transition shadow-sm"
+            >
+              <i class="fa-solid fa-arrow-up"></i>
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Launcher Button -->
+      <button 
+        type="button" 
+        @click="toggleBot" 
+        class="group relative flex items-center gap-2.5 px-5 py-3 rounded-full bg-slate-900 hover:bg-sky-600 text-white font-bold text-xs shadow-xl transition-all duration-300"
+      >
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-soft-pulse"></span>
+        <i class="fa-solid fa-robot text-sm"></i>
+        <span>Ask AI Concierge</span>
+        <span v-if="hasUnread" class="w-2.5 h-2.5 bg-sky-400 rounded-full"></span>
+      </button>
+
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div 
+      v-if="showToast" 
+      class="fixed bottom-6 left-6 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 animate-bounce-in"
+    >
+      <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+      <span>{{ toastMessage }}</span>
+    </div>
+
+  </div>
+
+  <!-- Data and Application Script -->
+  <script src="data/cars.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

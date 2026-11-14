@@ -235,7 +235,7 @@ const CARS_DATA = [
     seats: 5,
     doors: 4,
     images: [
-      "https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1647418552401-f3958302b72a?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80"
     ],
     highlights: [
